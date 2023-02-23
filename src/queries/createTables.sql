@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS pet;
 DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS species;
 DROP TABLE IF EXISTS size;
-DROP TABLE IF EXISTS gender;
+DROP TABLE IF EXISTS sex;
 DROP TABLE IF EXISTS usertype;
 DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS region;
@@ -14,9 +14,20 @@ CREATE TABLE IF NOT EXISTS region (id INTEGER NOT NULL PRIMARY KEY, name TEXT NO
 CREATE TABLE IF NOT EXISTS commune (id INTEGER NOT NULL PRIMARY KEY, region_id INTEGER NOT NULL, name TEXT NOT NULL, FOREIGN KEY (region_id) REFERENCES region(id));
 CREATE TABLE IF NOT EXISTS location (id INTEGER NOT NULL PRIMARY KEY, region_id NOT NULL, commune_id NOT NULL, address TEXT, FOREIGN KEY (region_id) REFERENCES region(id), FOREIGN KEY (commune_id) REFERENCES commune(id));
 CREATE TABLE IF NOT EXISTS usertype (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL);
-CREATE TABLE IF NOT EXISTS user (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL, phone_number TEXT NOT NULL, type_id INTEGER, webpage TEXT, description TEXT, is_verified BOOL DEFAULT 0, FOREIGN KEY (type_id) REFERENCES usertype(id));
+CREATE TABLE IF NOT EXISTS user (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL, phone_number TEXT NOT NULL, type_id INTEGER, webpage TEXT, description TEXT, is_verified INTEGER DEFAULT 0, FOREIGN KEY (type_id) REFERENCES usertype(id));
 CREATE TABLE IF NOT EXISTS species (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS size (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL);
-CREATE TABLE IF NOT EXISTS sex (id INTEGER NOT NULL, name TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sex (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS pet (id INTEGER NOT NULL PRIMARY KEY, name TEXT, is_adopted INTEGER NOT NULL DEFAULT 0, is_exotic INTEGER NOT NULL, species_id INTEGER NOT NULL, size_id INTEGER NOT NULL, breed TEXT NOT NULL DEFAULT "No especificado", gender_id INTEGER NOT NULL, age REAL NOT NULL, description TEXT DEFAULT "No se ha proporcionado una descripción para este animalito", owner_id INTEGER NOT NULL, email TEXT NOT NULL, phone_number TEXT NOT NULL, location_id INTEGER NOT NULL, FOREIGN KEY (species_id) REFERENCES species(id), FOREIGN KEY (size_id) REFERENCES size(id), FOREIGN KEY (gender_id) REFERENCES gender(id), FOREIGN KEY (owner_id) REFERENCES owner(id), FOREIGN KEY (location_id) REFERENCES location(id));
 CREATE TABLE IF NOT EXISTS image (id INTEGER NOT NULL PRIMARY KEY, pet_id INTEGER NOT NULL, url TEXT NOT NULL, FOREIGN KEY (pet_id) REFERENCES pet(id));
+
+
+INSERT INTO usertype (id, name) VALUES (0, "Person");
+INSERT INTO usertype (id, name) VALUES (1, "Organization");
+
+INSERT INTO size (id, name) VALUES (0, "Small");
+INSERT INTO size (id, name) VALUES (1, "Medium");
+INSERT INTO size (id, name) VALUES (2, "Large");
+
+INSERT INTO sex (id, name) VALUES (0, "Female");
+INSERT INTO sex (id, name) VALUES (1, "Male");
